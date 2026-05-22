@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import ChatWindow from './components/ChatWindow/ChatWindow.jsx';
 import { sendChatMessage } from './services/chatApi.js';
 
+// Every chat item has the same shape, which keeps rendering components simple.
 const createMessage = (role, content) => ({
   id: crypto.randomUUID(),
   role,
@@ -27,6 +28,7 @@ function App() {
   const handleSendMessage = async (message) => {
     const userMessage = createMessage('user', message);
 
+    // Optimistically show the user's message before waiting for the API response.
     setMessages((currentMessages) => [...currentMessages, userMessage]);
     setIsLoading(true);
 
@@ -37,6 +39,7 @@ function App() {
         createMessage('assistant', reply)
       ]);
     } catch (error) {
+      // Surface backend-friendly messages such as invalid token or provider downtime.
       setMessages((currentMessages) => [
         ...currentMessages,
         createMessage(

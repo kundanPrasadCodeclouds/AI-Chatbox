@@ -10,6 +10,7 @@ function ChatInput({ isLoading, onSendMessage }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // Prevent empty messages and duplicate sends while the assistant is responding.
     if (isSendDisabled) {
       return;
     }
@@ -28,6 +29,7 @@ function ChatInput({ isLoading, onSendMessage }) {
         value={message}
         onChange={(event) => setMessage(event.target.value)}
         onKeyDown={(event) => {
+          // Enter sends the message; Shift+Enter keeps normal multiline typing.
           if (event.key === 'Enter' && !event.shiftKey) {
             handleSubmit(event);
           }

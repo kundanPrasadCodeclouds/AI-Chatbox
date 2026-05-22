@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 
+// Loads backend/.env when the server starts. Keep secrets out of source control.
 dotenv.config();
 
 export const env = {

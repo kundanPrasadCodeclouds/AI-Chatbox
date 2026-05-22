@@ -3,6 +3,7 @@ const MAX_MESSAGE_LENGTH = 2000;
 export const validateChatRequest = (req, res, next) => {
   const { message } = req.body;
 
+  // Validate before calling Hugging Face so invalid requests fail fast and cheaply.
   if (typeof message !== 'string') {
     return res.status(400).json({
       message: 'Message is required and must be a string.'
@@ -23,6 +24,7 @@ export const validateChatRequest = (req, res, next) => {
     });
   }
 
+  // Store the cleaned message for the controller/service layer.
   req.body.message = trimmedMessage;
   return next();
 };

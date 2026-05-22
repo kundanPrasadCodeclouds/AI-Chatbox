@@ -8,6 +8,7 @@ import chatRoutes from './routes/chatRoutes.js';
 
 const app = express();
 
+// Security, browser access, JSON parsing, and request logging middleware.
 app.use(helmet());
 app.use(
   cors({
@@ -19,10 +20,12 @@ app.use(
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(env.nodeEnv === 'production' ? 'combined' : 'dev'));
 
+// Lightweight endpoint for setup checks and uptime monitors.
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
+// Versioned API routes live behind /api so the frontend has one stable base URL.
 app.use('/api', chatRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,5 +1,6 @@
 import { env } from './env.js';
 
+// Centralized Hugging Face settings keep provider details out of controllers.
 export const huggingFaceConfig = {
   model: env.huggingFaceModel,
   endpoint: env.huggingFaceApiUrl,

@@ -13,6 +13,7 @@ export const generateChatReply = async (message) => {
 
   let result;
 
+  // Network failures are separated from Hugging Face API errors for clearer UI messages.
   try {
     result = await callHuggingFaceChat(message);
   } catch (error) {
@@ -24,6 +25,7 @@ export const generateChatReply = async (message) => {
     throw serviceError;
   }
 
+  // Non-2xx responses usually mean an invalid token, unsupported model, or provider issue.
   if (!result.ok) {
     const error = new Error(
       result.payload.error?.message ||
@@ -34,6 +36,7 @@ export const generateChatReply = async (message) => {
     throw error;
   }
 
+  // The controller only needs the final assistant text, not the full provider payload.
   const reply = extractGeneratedText(result.payload);
 
   if (!reply) {

@@ -7,6 +7,8 @@ import {
 } from '../services/huggingFaceClient.js';
 import { maskSecret } from '../utils/maskSecret.js';
 
+// This script is a safe setup checklist for new developers.
+// It validates configuration, credentials, and model support without exposing secrets.
 const printStep = (title) => {
   console.log(`\n[Step] ${title}`);
 };
@@ -22,6 +24,7 @@ const printFail = (message, details = {}) => {
 const assertEnvShape = () => {
   printStep('Checking local environment variables');
 
+  // Keep enough detail for debugging while masking the sensitive token value.
   const checks = {
     nodeVersion: process.version,
     nodeEnv: env.nodeEnv,
@@ -64,6 +67,7 @@ const assertEnvShape = () => {
 const assertTokenWorks = async () => {
   printStep('Checking Hugging Face token credentials');
 
+  // whoami-v2 confirms that the token is valid before we test the model.
   const result = await checkHuggingFaceToken();
 
   if (!result.ok) {
@@ -85,6 +89,7 @@ const assertTokenWorks = async () => {
 const assertModelWorks = async () => {
   printStep('Checking router endpoint, model, and provider support');
 
+  // A tiny completion proves the selected model/provider combination is usable.
   const result = await callHuggingFaceChat('Say hello in one short sentence.', {
     max_tokens: 30
   });

@@ -1,6 +1,7 @@
 import { env } from '../config/env.js';
 import { huggingFaceConfig } from '../config/huggingFace.js';
 
+// Hugging Face can return JSON errors or plain text responses, so parse safely.
 const parseJsonSafely = async (response) => {
   const text = await response.text();
 
@@ -15,6 +16,7 @@ const parseJsonSafely = async (response) => {
   }
 };
 
+// Builds the OpenAI-compatible request body used by Hugging Face's router API.
 export const createChatPayload = (message, overrides = {}) => ({
   model: huggingFaceConfig.model,
   messages: [
@@ -32,6 +34,7 @@ export const createChatPayload = (message, overrides = {}) => ({
   ...overrides
 });
 
+// Keeps response parsing in one place in case the provider response changes later.
 export const extractGeneratedText = (payload) => {
   const reply = payload?.choices?.[0]?.message?.content;
 
@@ -44,6 +47,7 @@ export const extractGeneratedText = (payload) => {
 
 export const callHuggingFaceChat = async (message, overrides = {}) => {
   if (env.debugHuggingFace) {
+    // This log intentionally excludes the API token.
     console.log('[HF Debug] Sending chat request', {
       endpoint: huggingFaceConfig.endpoint,
       model: huggingFaceConfig.model,
@@ -69,6 +73,7 @@ export const callHuggingFaceChat = async (message, overrides = {}) => {
   };
 };
 
+// Used by npm run doctor:hf to confirm the token is valid without printing it.
 export const checkHuggingFaceToken = async () => {
   const response = await fetch('https://huggingface.co/api/whoami-v2', {
     headers: {
